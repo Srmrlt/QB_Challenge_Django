@@ -2,6 +2,7 @@ import os
 from lxml import etree
 from django.core.management.base import BaseCommand, CommandError
 from django.db import DatabaseError
+from inflection import underscore as camel_to_snake
 from data_processor.models import *
 
 
@@ -55,33 +56,20 @@ def parse_manifest(xml_path: str):
 
     for exchange in root.xpath('.//Exchange'):
         try:
-            exchange_name = exchange.get('Name')
-            location = exchange.get('Location')
-            exchange_m, created = Exchange.objects.get_or_create(
-                date=manifest_date,
-                name=exchange_name,
-                location=location,
-            )
+            attributes = {camel_to_snake(attr): exchange.get(attr)
+                          for attr in ['Name', 'Location']}
+            exchange_m, created = Exchange.objects.get_or_create(date=manifest_date, **attributes)
         except DatabaseError as e:
             print(f'Database error processing exchange: {e}')
             continue
 
         for instrument in exchange.xpath('.//Instrument'):
             try:
-                instrument_name = instrument.get('Name')
-                storage_type = instrument.get('StorageType')
-                levels = instrument.get('Levels')
-                iid = int(instrument.get('Iid'))
-                available_interval_begin = instrument.get('AvailableIntervalBegin')
-                available_interval_end = instrument.get('AvailableIntervalEnd')
-                Instrument.objects.get_or_create(
-                    exchange=exchange_m,
-                    name=instrument_name,
-                    storage_type=storage_type,
-                    levels=levels,
-                    iid=iid,
-                    available_interval_begin=available_interval_begin,
-                    available_interval_end=available_interval_end,
-                )
+                attributes = {camel_to_snake(attr): instrument.get(attr)
+                              for attr in ['Name', 'StorageType', 'Levels', 'Iid',
+                                           'AvailableIntervalBegin', 'AvailableIntervalEnd']}
+                attributes['iid'] = int(attributes['iid'])
+                Instrument.objects.get_or_create(exchange=exchange_m, **attributes)
             except DatabaseError as e:
                 print(f'Database error processing instrument: {e}')
+                continue
