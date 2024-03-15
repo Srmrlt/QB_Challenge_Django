@@ -4,56 +4,54 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import StreamingHttpResponse, HttpResponseBadRequest, HttpResponseNotFound
 
-from data_processor.serializers import Payload
-from data_processor.models import Instrument
+from data_processor.serializers import *
+from data_processor.services import get_filtered_instruments
 from data_processor.utils import read_file_in_chunks
 
 
 class IsinExistsView(APIView):
-    serializer_class = Payload
-
+    """
+    Handles GET requests for searching financial instruments based on filters like date, name, and exchange.
+    Validates query parameters using IsinExistsFilterSerializer and retrieves matching instruments from the database.
+    Returns serialized instrument data or an empty list.
+    """
     def get(self, request):
-        date = request.query_params.get('date')
-        instrument = request.query_params.get('instrument')
-        exchange = request.query_params.get('exchange')
-        queryset = Instrument.objects.all()
-
-        if date:
-            queryset = queryset.filter(exchange__date__date=date)
-        if instrument:
-            queryset = queryset.filter(name=instrument)
-        if exchange:
-            queryset = queryset.filter(exchange__name=exchange)
-
+        serializer = IsinExistsFilterSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+        queryset = get_filtered_instruments(serializer.validated_data,
+                                     {'date': 'exchange__date__date',
+                                      'instrument': 'name',
+                                      'exchange': 'exchange__name'})
         serializer = Payload(queryset, many=True)
         return Response({'result': serializer.data})
 
 
 class IsinExistsIntervalView(APIView):
+    """
+    Handles GET requests for finding financial instruments within a date range and other filters.
+    Validates request with IsinExistsIntervalFilterSerializer and fetches filtered instruments.
+    Returns serialized instrument data or an empty list.
+    """
     def get(self, request):
-        date = request.query_params.get('date')
-        instrument = request.query_params.get('instrument')
-        exchange = request.query_params.get('exchange')
-        queryset = Instrument.objects.filter(
-            exchange__date__date=date,
-            name=instrument,
-            exchange__name=exchange
-        ).first()
-
-        serializer = Payload(queryset)
+        serializer = IsinExistsIntervalFilterSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+        queryset = get_filtered_instruments(serializer.validated_data,
+                                     {'instrument': 'name', 'exchange': 'exchange__name'})
+        serializer = Payload(queryset, many=True)
         return Response({'result': serializer.data if queryset else None})
 
 
 class IidToIsinView(APIView):
+    """
+    Retrieves financial instruments by internal ID (IID) and date using IidToIsinFilterSerializer.
+    Returns serialized instrument data or an empty list.
+    """
     def get(self, request):
-        date = request.query_params.get('date')
-        iid = int(request.query_params.get('iid'))
-        queryset = Instrument.objects.filter(
-            iid=iid,
-            exchange__date__date=date
-        ).first()
-
-        serializer = Payload(queryset)
+        serializer = IidToIsinFilterSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+        queryset = get_filtered_instruments(serializer.validated_data,
+                                     {'date': 'exchange__date__date', 'iid': 'iid'})
+        serializer = Payload(queryset, many=True)
         return Response({'result': serializer.data if queryset else None})
 
 

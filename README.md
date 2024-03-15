@@ -64,7 +64,7 @@ Based on the test assignment, the following endpoints are implemented:
 
 * ### Check Availability by Time Interval:
 
-`GET /api/isin_exists_interval?date=YYYY-mm-dd&instrument=<instrument>&exchange=<exchange>`
+`GET /api/isin_exists_interval?date_from=YYYY-mm-dd&date_to=YYYY-mm-dd&instrument=<instrument>&exchange=<exchange>`
 
 * ### Get Instrument Info by ID:
 
