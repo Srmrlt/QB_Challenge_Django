@@ -21,6 +21,7 @@ directory in this repository.
 * Docker
 * Docker Compose
 * Nginx
+* GitHub Actions
 
 ## Requirements
 
