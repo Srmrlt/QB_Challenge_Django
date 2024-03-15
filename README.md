@@ -72,7 +72,7 @@ Based on the test assignment, the following endpoints are implemented:
 
 * ### Stream Binary File Data:
 
-`GET /stream/<path:file_path>?chunk_size=<size_in_bytes>`
+`GET /stream/<year>/<month>/<date>/<filename>?chunk_size=<size_in_bytes>`
 
 ## Additional Notes
 
