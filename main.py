@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
 from database.queries import OrmMethods
-from xml_parser import parse_data
+from services.xml_parser import parse_data
 from router import router_search, router_stream
 
 
