@@ -3,7 +3,7 @@ from database.queries import OrmMethods
 from database.models import DateOrm, ExchangeOrm, InstrumentOrm
 
 
-async def search_data(validated_data: dict[str, Any]):
+async def data_search(validated_data: dict[str, Any]):
     criteria = {
         DateOrm.date: validated_data.get('date'),
         InstrumentOrm.name: validated_data.get('instrument'),
@@ -16,6 +16,5 @@ async def search_data(validated_data: dict[str, Any]):
         conditions.append(DateOrm.date >= validated_data.get('date_from'))
     if validated_data.get('date_to'):
         conditions.append(DateOrm.date <= validated_data.get('date_to'))
-    data = await OrmMethods.find_data(conditions)
 
-    return data
+    return await OrmMethods.find_data(conditions)

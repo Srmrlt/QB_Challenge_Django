@@ -17,7 +17,7 @@ async def configure_stream_response(validated_data: dict[str, Any]) -> dict[str,
     chunk_size = validated_data.get('chunk')
     date = validated_data.get('date')
     filename = validated_data.get('filename')
-    file_path = os.path.join('data', str(date.year), str(date.month), str(date.day), filename)
+    file_path = os.path.join('../data', str(date.year), str(date.month), str(date.day), filename)
     await __check_file_availability(file_path)
     file_size = os.path.getsize(file_path)
     headers = {

@@ -9,7 +9,7 @@ from database.models import *
 async def parse_data():
     try:
         # Parsing the xml files in data directory
-        await _parse_directory('./data')
+        await _parse_directory('../data')
     except Exception as e:
         raise Exception(f'Error parsing data: {e}')
 
@@ -56,7 +56,7 @@ async def _parse_manifest(xml_path: str):
         try:
             attributes = {camel_to_snake(attr): exchange.get(attr)
                           for attr in ['Name', 'Location']}
-            attributes['date'] = date_pk
+            attributes['date_id'] = date_pk
             exchange_pk = await OrmMethods.add_new_data(ExchangeOrm, attributes)
         except SQLAlchemyError as e:
             print(f'Database error processing exchange: {e}')
@@ -71,7 +71,7 @@ async def _parse_manifest(xml_path: str):
                 attributes['available_interval_begin'] = datetime.datetime.strptime(attributes['available_interval_begin'], '%H:%M').time()
                 attributes['available_interval_end'] = datetime.datetime.strptime(attributes['available_interval_end'],
                                                                                   '%H:%M').time()
-                attributes['exchange'] = exchange_pk
+                attributes['exchange_id'] = exchange_pk
                 await OrmMethods.add_new_data(InstrumentOrm, attributes)
             except SQLAlchemyError as e:
                 print(f'Database error processing instrument: {e}')
