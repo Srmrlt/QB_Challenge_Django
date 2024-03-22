@@ -16,12 +16,7 @@ RUN apt-get update && \
 #Copy app
 COPY . .
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
-
 # Run app
 ENTRYPOINT ["/bin/sh", "-c", \
     "python task/generate_bin.py && \
-    python manage.py migrate --noinput && \
-    python manage.py xml_parser && \
-    exec gunicorn config.wsgi:application --bind 0:8000 --workers 3"]
+    exec uvicorn main:app --host 0.0.0.0 --port 8000"]

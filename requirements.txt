@@ -8,3 +8,6 @@ envparse==0.2.0
 pydantic-settings==2.2.1
 pydantic==2.6.4
 lxml==5.1.0
+starlette==0.36.3
+aiofiles==23.2.1
+inflection==0.5.1
