@@ -3,7 +3,8 @@ from contextlib import asynccontextmanager
 
 from database.queries import OrmMethods
 from services.xml_parser import parse_data
-from router import router_search, router_stream
+from router.router_api import router_api
+from router.router_stream import router_stream
 
 
 @asynccontextmanager
@@ -18,5 +19,5 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-app.include_router(router_search)
+app.include_router(router_api)
 app.include_router(router_stream)
