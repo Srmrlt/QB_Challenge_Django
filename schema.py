@@ -11,21 +11,21 @@ class Payload(BaseModel):
     
 
 class IsinExistsFilterSchema(BaseModel):
-    date: Optional[datetime.date] = None
-    instrument: Optional[str] = None
-    exchange: Optional[str] = None
+    date: datetime.date
+    instrument: [str | None] = None
+    exchange: [str | None] = None
 
 
 class IsinExistsIntervalFilterSchema(BaseModel):
-    date_from: Optional[datetime.date] = None
-    date_to: Optional[datetime.date] = None
-    instrument: Optional[str] = None
-    exchange: Optional[str] = None
+    date_from: datetime.date
+    date_to: datetime.date
+    instrument: str
+    exchange: str
 
 
 class IidToIsinFilterSchema(BaseModel):
-    date: Optional[datetime.date] = None
-    iid: Optional[int] = None
+    date: datetime.date
+    iid: int
 
 
 class StreamSchema(BaseModel):
