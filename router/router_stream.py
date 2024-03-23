@@ -2,7 +2,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from starlette.responses import StreamingResponse
 from services.file_streaming import configure_stream_response
-from serializers import StreamSerializer
+from schema import StreamSchema
 
 
 router_stream = APIRouter(tags=['Stream'])
@@ -10,7 +10,7 @@ router_stream = APIRouter(tags=['Stream'])
 
 @router_stream.get("/stream")
 async def stream_binary_file(
-        attr: Annotated[StreamSerializer, Depends()]
+        attr: Annotated[StreamSchema, Depends()]
 ):
     s_attr = attr.model_dump()
     return StreamingResponse(**await configure_stream_response(s_attr))
