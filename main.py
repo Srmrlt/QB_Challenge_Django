@@ -3,8 +3,7 @@ from contextlib import asynccontextmanager
 
 from database.queries import OrmMethods
 from services.xml_parser import parse_data
-from router.router_api import router_api
-from router.router_stream import router_stream
+from router import router_api, router_stream
 
 
 @asynccontextmanager
