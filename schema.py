@@ -1,5 +1,4 @@
 import datetime
-from typing import Optional
 from pydantic import BaseModel, conint
 
 
@@ -8,12 +7,12 @@ class Payload(BaseModel):
     exchange: str
     iid: int
     storage_type: str
-    
+
 
 class IsinExistsFilterSchema(BaseModel):
     date: datetime.date
-    instrument: [str | None] = None
-    exchange: [str | None] = None
+    instrument: str | None = None
+    exchange: str | None = None
 
 
 class IsinExistsIntervalFilterSchema(BaseModel):
