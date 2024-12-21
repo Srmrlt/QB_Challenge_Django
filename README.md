@@ -15,8 +15,9 @@ directory in this repository.
 ## Technologies Used
 
 * Python
-* Django
-* Django REST Framework (DRF)
+* FastAPI
+* SQLAlchemy
+* Pydantic
 * PostgreSQL
 * Docker
 * Docker Compose
@@ -33,27 +34,24 @@ directory in this repository.
 1. **Clone the Repository**:
     ```shell
     git clone https://github.com/Srmrlt/QB_Challenge.git
+    git switch FastAPI-main
     cd QB_Challenge/infra
     ```
 2. **Environment Variables.** Copy the .env.dev file from the project infra folder
 to a new file named .env and fill in/adjust the necessary environment variables:
     ```shell
-    cp ../.env.dev .env
+    cp ../.env.example .env
     ```
 3. **Building and Running the Containers.**
 Use Docker Compose to build and start the containers:
     ```shell
     docker compose up --build -d
     ```
-4. **Creating Superuser** to access the admin panel (Optional):
-    ```shell
-    docker compose exec backend python manage.py createsuperuser
-    ```
-5. **Stopping and Removing Containers, Volumes, and Images**:
+4. **Stopping and Removing Containers, Volumes, and Images**:
     ```shell
     docker compose down --rmi all -v
     ```
-6. The project should now be running at http://localhost:80. 
+5. The project should now be running at http://localhost:80. 
 
 ## API Endpoints
 
@@ -73,7 +71,7 @@ Based on the test assignment, the following endpoints are implemented:
 
 * ### Stream Binary File Data:
 
-`GET /stream/<year>/<month>/<date>/<filename>?chunk_size=<size_in_bytes>`
+`GET /stream?date=YYYY-mm-dd&chunk_size=<size_in_bytes>`
 
 ## Additional Notes
 
